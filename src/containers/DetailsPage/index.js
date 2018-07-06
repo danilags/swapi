@@ -1,6 +1,6 @@
 import React from 'react';
 
-class PageDetails extends React.Component {
+class DetailsPage extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -17,4 +17,4 @@ class PageDetails extends React.Component {
   }
 };
 
-export default PageDetails;
+export default DetailsPage;

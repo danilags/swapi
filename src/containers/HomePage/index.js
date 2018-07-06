@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 class HomePage extends React.Component {
   constructor(props) {
@@ -20,4 +21,8 @@ class HomePage extends React.Component {
   }
 };
 
-export default HomePage;
+const mapStateToProps = state => ({
+  dataHero: state.heroReducer
+});
+
+export default connect(mapStateToProps, null)(HomePage);

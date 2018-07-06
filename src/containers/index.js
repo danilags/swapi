@@ -5,7 +5,7 @@ import {
 } from 'react-router-dom'
 
 import HomePage from './HomePage';
-import PageDetails from './PageDetails';
+import DetailsPage from './DetailsPage';
 
 const routes = [
   {
@@ -16,7 +16,7 @@ const routes = [
   {
     exact:true,
     path:'/myhero/:id',
-    component: PageDetails
+    component: DetailsPage  
   },
 ];
 

@@ -1,10 +1,10 @@
 // import all reducers and group under combineReducers
 import { combineReducers } from 'redux';
 
-import heroReducer from './heroReducer';
+import charReducer from './charReducer';
 
 const rootReducer = combineReducers({
-	heroReducer,
+	charReducer,
 });
 
 export default rootReducer;

@@ -1,34 +1,58 @@
 import React from 'react';
 import {
   BrowserRouter as Router,
-  Route
 } from 'react-router-dom'
 
+import PageApp from './PageApp';
 import HomePage from './HomePage';
 import DetailsPage from './DetailsPage';
+import RouteWithSubRoutes from './Route';
 
 const routes = [
   {
-    exact:true,
-    path:'/',
-    component: HomePage
-  },
-  {
-    exact:true,
-    path:'/myhero/:id',
-    component: DetailsPage  
-  },
+    component: PageApp,
+    routes: [
+      {
+        exact:true,
+        path:'/myhero/:id',
+        component: DetailsPage  
+      },
+      {
+        exact:true,
+        path:'/reset-password/:token',
+        component:DetailsPage
+		  },
+      {
+        exact:true,
+        path:'/forgot-password',
+        component:DetailsPage
+      },
+      {
+        path:'/helps',
+        component:DetailsPage
+      },
+      {
+        exact:true,
+        path:'/login',
+        component:DetailsPage
+      },
+      {
+        exact:true,
+        path:'/',
+        component: HomePage
+      },
+    ]
+  }
 ];
 
 const AppRoute = () => (
-  <Router>
-    <div>
+	<Router>
+		<div>
 			{routes.map((route, i) => (
-				<Route key={i} {...route}/>
+		 		<RouteWithSubRoutes key={i} {...route} text="Daniel Agus" />
 			))}
 		</div>
-  </Router>
+	</Router>
 );
-
 
 export default AppRoute;

@@ -1,10 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import {
+  Row, 
+  Col
+} from 'reactstrap';
 
 import { fetchCharacter } from '../../actions';
 import { GET_DETAILS_CHARACTER } from '../../constants';
 
 import { Wrapper } from '../../components';
+import Details from './Details';
 
 class DetailsPage extends React.Component {
   constructor(props) {
@@ -12,6 +17,7 @@ class DetailsPage extends React.Component {
     this.state = {
       characterId: this.props.match.params.id,
       character: {}
+
     }
   }
 
@@ -20,8 +26,8 @@ class DetailsPage extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { characterDetails } = nextProps.dataCharacter
-    if (characterDetails.isFulfilled && this.props.dataCharacter.characterDetails === null) {
+    const { characterDetails, isFetch } = nextProps.dataCharacter
+    if (!isFetch && this.props.dataCharacter.characterDetails === null) {
       this.setState({
         character: characterDetails
       })
@@ -29,12 +35,20 @@ class DetailsPage extends React.Component {
   }
 
   render() {
+    const { isFetch } = this.props.dataCharacter;
+    if (isFetch) {
+      return <Wrapper><p>Loading...</p></Wrapper>
+    }
     return (
       <Wrapper>
-        <p>{ this.state.character.name }</p>
-        <p>{ this.state.character.birth_year }</p>
-        <p>{ this.state.character.gender }</p>
-        <p>{ this.state.character.eye_color }</p>
+        <p>Name : { this.state.character.name }</p>
+        <p>Birthday : { this.state.character.birth_year }</p>
+        <p>Gender : { this.state.character.gender }</p>
+        <p>Eye Color: { this.state.character.eye_color }</p>
+        <Details 
+          films={this.state.character.films}
+          vehicles={this.state.character.vehicles}
+        />
       </Wrapper>
     );
   }

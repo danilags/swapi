@@ -1,7 +1,8 @@
 import { API_CALL } from '../utils';
 import {
   GET_ALL_CHARACTER,
-  FILTER_CHARACTER
+  FILTER_CHARACTER,
+  PENDING_FETCH_CHARACTER
 } from '../constants';
 
 export const fetchCharacter = ({ url, type }) => async dispatch => {
@@ -12,6 +13,16 @@ export const fetchCharacter = ({ url, type }) => async dispatch => {
 		});
 		return data;
   }
+
+  function onPending() {
+		dispatch({
+			type: PENDING_FETCH_CHARACTER,
+			payload: true
+		});
+		return true;
+  }
+
+  onPending();
   
   try {
     const option = {
@@ -30,13 +41,6 @@ export const fetchCharacter = ({ url, type }) => async dispatch => {
 }
 
 export const filterCharacter = (params) => async dispatch => {
-  function onPending() {
-    dispatch({
-			type: 'PENDING_FILTER_CHARACTER',
-			payload: ''
-		});
-		return params;
-  }
   function onSuccess(params) {
 		dispatch({
 			type: FILTER_CHARACTER,
@@ -45,12 +49,8 @@ export const filterCharacter = (params) => async dispatch => {
 		return params;
   }
   
-  onPending();
-
 	try {
-    setTimeout(() => { 
-      return onSuccess(params);
-    }, 2000);
+    return onSuccess(params);
 		
 	} catch (error) {
 		const errMsg = {

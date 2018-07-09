@@ -27,18 +27,8 @@ const NavBar = (props) => (
             Filter
           </DropdownToggle>
           <DropdownMenu right>
-            <DropdownItem onClick={() => props.onFilter('Homeworld')}>
-              Homeworld
-            </DropdownItem>
             <DropdownItem onClick={() => props.onFilter('Vehicles')}>
               Vehicles
-            </DropdownItem>
-            <DropdownItem onClick={() => props.onFilter('Skin Color')}>
-              Skin Color
-            </DropdownItem>
-            <DropdownItem divider />
-            <DropdownItem onClick={() => props.onFilter('Reset')}>
-              Reset
             </DropdownItem>
           </DropdownMenu>
         </UncontrolledDropdown>

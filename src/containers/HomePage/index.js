@@ -6,21 +6,21 @@ import {
 
 import { fetchCharacter } from '../../actions';
 import { Wrapper, CharacterBox } from '../../components';
+import { GET_ALL_CHARACTER } from '../../constants';
 
 class HomePage extends React.Component {
   constructor(props) {
     super(props) 
     this.state = {
-      listChar: [],
-      tmpListChar: [],
       page: 1,
       prevY: 0,
-      loading: false
+      loading: false,
+      hasFiltered: false
     }
   }
   
   componentDidMount() {
-    this.props.fetchCharacter({ page: this.state.page });
+    this.props.fetchCharacter({ url: `people/?page=${this.state.page}`, type: GET_ALL_CHARACTER });
     let options = {
       root: null, 
       rootMargin: '0px',
@@ -37,10 +37,10 @@ class HomePage extends React.Component {
   handleObserver(entities, observer) {
     const { character } = this.props;
     const y = entities[0].boundingClientRect.y;
-    if (character.listCharacter.status_code !== 404) {
+    if (character.listCharacter.status_code !== 404 && character.listCharacter.error !== "Not found") {
       if (this.state.prevY > y) {
         const curPage = this.state.page + 1;
-        this.props.fetchCharacter({ page: curPage });
+        this.props.fetchCharacter({ url: `people/?page=${curPage}`, type: GET_ALL_CHARACTER });
         this.setState({ page: curPage, loading: true });
       }
       this.setState({ prevY: y });
@@ -48,41 +48,38 @@ class HomePage extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { listCharacter } = nextProps.character;
+    const { listCharacter, filterBy, hasFiltered } = nextProps.character;
     const { character } = this.props;
-    console.log('PROPS KE BIND ', character);
-    console.log('BELUM KE BIND ', listCharacter);
-    if (listCharacter.status_code === 200 && listCharacter.nextPage !== character.listCharacter.nextPage) {
-      let { listChar } = this.state;
-      listCharacter.data.forEach(item => listChar.push(item));
+    if (listCharacter.status_code === 404 && listCharacter.error === "Not found") {
       this.setState({
-        listChar,
-        loading: !this.state.loading
-      })
-    } else if (listCharacter.status_code === 404 && listCharacter.error !== character.listCharacter.error) {
-      this.setState({
-        loading: !this.state.loading
+        loading: false
       })
     }
   }
 
   renderDataSource() {
-    const { status_code } = this.props.character.listCharacter;
-    const { listChar } = this.state;
-    if (!listChar.length) {
+    const { isFetch, listCharacter: { status_code, data } } = this.props.character;
+    if (isFetch && !data.length) {
       return <Wrapper><h3>Loading...</h3></Wrapper>
     } 
     return (
       <Row>
-        {this.state.listChar.map((item, index) => (
-          <CharacterBox key={index} onClick={() => alert(item.name)}>
-            <h2>{item.name}</h2>
-            <div className="char__desc">
-              <p>Gender: {item.gender}</p>
-              <p>Height: {item.height}</p>
-              <p>Birth: {item.birth_year}</p>
-              <p>Skin Color: {item.skin_color}</p>
-            </div>
+        {data.map((item, index) => (
+          <CharacterBox 
+            key={index} 
+            idCharacter={++index} 
+          >
+            <a href={`character/${++index}`} title={`${item.name}`}>
+              <div  className="child__wrap" style={{ padding: '10px', margin: '5px', border: '1px solid #ccc', cursor: 'pointer' }}>
+                <h2>{item.name}</h2>
+                <div className="char__desc">
+                  <p>Gender: {item.gender}</p>
+                  <p>Height: {item.height}</p>
+                  <p>Birth: {item.birth_year}</p>
+                  <p>Skin Color: {item.skin_color}</p>
+                </div>
+              </div>
+            </a>
           </CharacterBox>
         ))}
       </Row>
@@ -90,7 +87,6 @@ class HomePage extends React.Component {
   }
 
   render() {
-    console.log('STATE RENDER ', this.state);
     const loadingTextCSS = { display: this.state.loading ? 'block' : 'none' };
     const loadingCSS = {
       height: '100px',
@@ -115,7 +111,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  fetchCharacter: (params) => dispatch(fetchCharacter(params))
+  fetchCharacter: (params) => dispatch(fetchCharacter(params)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomePage);

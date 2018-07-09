@@ -1,5 +1,6 @@
-import { fetchCharacter } from './charAction';
+import { fetchCharacter, filterCharacter } from './charAction';
 
 export {
-  fetchCharacter
+  fetchCharacter,
+  filterCharacter
 };

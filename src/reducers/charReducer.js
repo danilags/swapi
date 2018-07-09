@@ -1,7 +1,8 @@
 import {
   GET_ALL_CHARACTER,
   GET_DETAILS_CHARACTER,
-  FILTER_CHARACTER
+  FILTER_CHARACTER,
+  PENDING_FETCH_CHARACTER
 } from '../constants';
 
 const initialState = {
@@ -13,11 +14,17 @@ const initialState = {
   },
   characterDetails: null,
   filterBy: '',
-  hasFiltered: false
+  hasFiltered: false,
+  isFetch: false
 }
 
 const charReducer = (state = initialState, action) => {
   switch (action.type) {
+    case PENDING_FETCH_CHARACTER: {
+      return {
+        ...state, isFetch: action.payload
+      }
+    }
     case GET_ALL_CHARACTER: {
       if (action.payload.status_code !== 404) {
         const { results, next } = action.payload.data;
@@ -25,10 +32,11 @@ const charReducer = (state = initialState, action) => {
           ...state, 
             listCharacter: {
               ...state.listCharacter, 
-                data: results,
+                data: [ ...state.listCharacter.data, ...results ],
                 status_code: action.payload.status,
                 nextPage: next
-            } 
+            },
+            isFetch: false
         }
       }
       return {
@@ -39,21 +47,34 @@ const charReducer = (state = initialState, action) => {
               error: action.payload.message
           }
       }
-      
     }
     case GET_DETAILS_CHARACTER: {
       return {
         ...state, 
           characterDetails: {
-            ...state.characterDetails, ...action.payload.data, isFulfilled: true
-          }
+            ...state.characterDetails, ...action.payload.data
+          },
+          isFetch: false
       }
     }
     case FILTER_CHARACTER: {
+      if (action.payload === "Vehicles") {
+        const lastState = [ ...state.listCharacter.data ]
+        console.log('LAST STATE ', lastState);
+        const vehiclesFiltering = lastState.filter(item => item.vehicles.length !== 0)
+        return {
+          ...state,
+            listCharacter: {
+              ...state.listCharacter, data: vehiclesFiltering 
+            },
+            filterBy: action.payload,
+            hasFiltered: true
+        }
+      }
       return {
         ...state,
         filterBy: action.payload,
-        hasFiltered: true
+        hasFiltered: false
       }
     }
     case 'PENDING_FILTER_CHARACTER': {

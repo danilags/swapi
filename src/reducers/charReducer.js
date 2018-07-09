@@ -1,5 +1,7 @@
 import {
-  GET_ALL_HERO
+  GET_ALL_CHARACTER,
+  GET_DETAILS_CHARACTER,
+  FILTER_CHARACTER
 } from '../constants';
 
 const initialState = {
@@ -8,12 +10,15 @@ const initialState = {
     status_code: 0,
     error: null,
     nextPage: null,
-	}
+  },
+  characterDetails: null,
+  filterBy: '',
+  hasFiltered: false
 }
 
 const charReducer = (state = initialState, action) => {
   switch (action.type) {
-    case GET_ALL_HERO: {
+    case GET_ALL_CHARACTER: {
       if (action.payload.status_code !== 404) {
         const { results, next } = action.payload.data;
         return {
@@ -35,6 +40,28 @@ const charReducer = (state = initialState, action) => {
           }
       }
       
+    }
+    case GET_DETAILS_CHARACTER: {
+      return {
+        ...state, 
+          characterDetails: {
+            ...state.characterDetails, ...action.payload.data, isFulfilled: true
+          }
+      }
+    }
+    case FILTER_CHARACTER: {
+      return {
+        ...state,
+        filterBy: action.payload,
+        hasFiltered: true
+      }
+    }
+    case 'PENDING_FILTER_CHARACTER': {
+      return {
+        ...state,
+        filterBy: action.payload,
+        hasFiltered: false
+      }
     }
     default: return state;
   }

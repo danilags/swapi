@@ -14,27 +14,8 @@ const routes = [
     routes: [
       {
         exact:true,
-        path:'/myhero/:id',
+        path:'/character/:id',
         component: DetailsPage  
-      },
-      {
-        exact:true,
-        path:'/reset-password/:token',
-        component:DetailsPage
-		  },
-      {
-        exact:true,
-        path:'/forgot-password',
-        component:DetailsPage
-      },
-      {
-        path:'/helps',
-        component:DetailsPage
-      },
-      {
-        exact:true,
-        path:'/login',
-        component:DetailsPage
       },
       {
         exact:true,

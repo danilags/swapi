@@ -1,3 +1,5 @@
 export const API_BASE_URL ='https://swapi.co';
 
-export const GET_ALL_HERO = 'GET_ALL_HERO';
+export const GET_ALL_CHARACTER = 'GET_ALL_CHARACTER';
+export const GET_DETAILS_CHARACTER = 'GET_DETAILS_CHARACTER';
+export const FILTER_CHARACTER = 'FILTER_CHARACTER';

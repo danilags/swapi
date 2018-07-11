@@ -60,7 +60,6 @@ const charReducer = (state = initialState, action) => {
     case FILTER_CHARACTER: {
       if (action.payload === "Vehicles") {
         const lastState = [ ...state.listCharacter.data ]
-        console.log('LAST STATE ', lastState);
         const vehiclesFiltering = lastState.filter(item => item.vehicles.length !== 0)
         return {
           ...state,
